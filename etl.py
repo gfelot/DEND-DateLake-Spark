@@ -109,13 +109,24 @@ def process_log_data(spark, input_data, output_data):
     # write users table to parquet files
     users_table.write.mode('overwrite').parquet(output_data + 'users_table/')
 
-    # create timestamp column from original timestamp column
-    # get_timestamp = udf()
-    # df =
-
-    # create datetime column from original timestamp column
-    # get_datetime = udf()
-    # df =
+    ## create timestamp column from original timestamp column
+    # get_timestamp = udf(lambda x: str(int(int(x) / 1000)))
+    # df = df.withColumn("timestamp", get_timestamp(df.ts))
+    #
+    # # create datetime column from original timestamp column
+    # get_datetime = udf(lambda x: str(datetime.fromtimestamp(int(x) / 1000.0)))
+    # df = df.withColumn("datetime", get_datetime(df.ts))
+    #
+    # # extract columns to create time table
+    # time_table = df.select(
+    #     'timestamp',
+    #     hour('datetime').alias('hour'),
+    #     dayofmonth('datetime').alias('day'),
+    #     weekofyear('datetime').alias('week'),
+    #     month('datetime').alias('month'),
+    #     year('datetime').alias('year'),
+    #     date_format('datetime', 'F').alias('weekday')
+    # )
 
     # extract columns to create time table
     time_table = spark.sql("""
